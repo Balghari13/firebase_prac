@@ -1,6 +1,8 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_pract/UI/Widget/rounded_btn.dart';
-import 'package:firebase_pract/UI/Widget/text_form_field.dart';
+import 'package:firebase_pract/UI/home_page.dart';
 import 'package:firebase_pract/UI/signup_screen.dart';
+import 'package:firebase_pract/UI/utilis/toast_msg.dart';
 import 'package:flutter/material.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -14,6 +16,9 @@ class _LoginScreenState extends State<LoginScreen> {
   final _formKey = GlobalKey<FormState>();
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
+  bool loading = false;
+
+  final FirebaseAuth _logIn = FirebaseAuth.instance;
 
   @override
   void dispose() {
@@ -67,9 +72,30 @@ class _LoginScreenState extends State<LoginScreen> {
               ),
 
               SizedBox(height: 20,),
-              RoundedBtn(btnName: 'Log In', ontap: (){
+              RoundedBtn(btnName: 'Log In',isLoading: loading, ontap: (){
                   if(_formKey.currentState!.validate()){
+                    setState(() {
+                      loading = true;
+                    });
 
+                    _logIn.signInWithEmailAndPassword(
+                        email: emailController.text.toString(),
+                        password: passwordController.text.toString())
+                        .then((value){
+                          ToastMsg().showToastMsg(value.user!.email.toString());
+                          Navigator.pushReplacement(context,
+                              MaterialPageRoute(builder: (context)=>HomeScreen()));
+
+  setState(() {
+    loading = false;
+  });
+                    })
+                        .onError((error, stackTrace){
+                          ToastMsg().showToastMsg(error.toString());
+                          setState(() {
+                            loading= false;
+                          });
+                    });
                   }
               }),
               SizedBox(height: 15,),

@@ -1,6 +1,10 @@
+import 'dart:developer';
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_pract/UI/Widget/rounded_btn.dart';
+import 'package:firebase_pract/UI/home_page.dart';
 import 'package:firebase_pract/UI/login_screen.dart';
+import 'package:firebase_pract/UI/utilis/toast_msg.dart';
 import 'package:flutter/material.dart';
 
 class SignUpScreen extends StatefulWidget {
@@ -14,8 +18,9 @@ class _SignUpScreenState extends State<SignUpScreen> {
   final _formKey = GlobalKey<FormState>();
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
+  bool loading = false;
 
-  //final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
+  final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
 
   @override
   void dispose() {
@@ -61,7 +66,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
               obscureText: true,
               keyboardType: TextInputType.emailAddress,
               decoration: const InputDecoration(
-                hintText: 'Enter Email',
+                hintText: 'Enter Password',
                 prefixIcon: Icon(Icons.lock),
               ),
               validator: (value){
@@ -73,10 +78,32 @@ class _SignUpScreenState extends State<SignUpScreen> {
               },
             ),
           const SizedBox(height: 20,),
-          RoundedBtn(btnName: 'Sign Up', ontap: (){
+          RoundedBtn(btnName: 'Sign Up',isLoading: loading ,ontap: (){
             if(_formKey.currentState!.validate()){
+              setState(() {
+                loading= true;
+              });
+                _firebaseAuth.createUserWithEmailAndPassword(
+                    email: emailController.text.toString(),
+                    password: passwordController.text.toString())
+                    .then((value){
+                      ToastMsg().showToastMsg(value.user!.email.toString());
+                      Navigator.pushReplacement(context,
+                          MaterialPageRoute(builder: (context)=>HomeScreen()));
+                      setState(() {
+                        loading=false;
+                      });
+
+                })
+                    .onError((error, stackTrace){
+                      ToastMsg().showToastMsg(error.toString());
+                      setState(() {
+                        loading = false;
+                      });
+                });
 
             }
+
           }),
           const SizedBox(height: 20,),
           Row(
