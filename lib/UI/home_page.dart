@@ -1,7 +1,9 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
+import 'package:firebase_database/ui/firebase_animated_list.dart';
 import 'package:firebase_pract/UI/Widget/rounded_btn.dart';
 import 'package:firebase_pract/UI/login_screen.dart';
+import 'package:firebase_pract/UI/post_page.dart';
 import 'package:firebase_pract/UI/utilis/toast_msg.dart';
 import 'package:flutter/material.dart';
 
@@ -15,9 +17,9 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
 FirebaseAuth _signOut = FirebaseAuth.instance;
-bool loading = false;
-final databaseRef = FirebaseDatabase.instance.ref('user');
-final textController = TextEditingController();
+
+final ref = FirebaseDatabase.instance.ref('user');
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -34,47 +36,46 @@ ToastMsg().showToastMsg(error.toString());
           }, icon: Icon(Icons.logout_outlined))
         ],
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(18.0),
-        child: Column(
-          //mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            SizedBox(height: 15,),
+      floatingActionButton: FloatingActionButton(onPressed: (){
+        Navigator.push(context,
+            MaterialPageRoute(builder: (context)=>PostPage()));
+      },child: Icon(Icons.add),),
+      body: Column(
+        children: [
+Expanded(
+   child:  StreamBuilder(
+     stream: ref.onValue,
+     builder: (context, snapshot){
+       if(!snapshot.hasData){
+         return CircularProgressIndicator();
+       }else{
+         Map<dynamic, dynamic> map = snapshot.data!.snapshot.value as dynamic;
+         List<dynamic> list = [];
+         list.clear();
+        list = map.values.toList();
+        return ListView.builder(
+          itemCount: snapshot.data!.snapshot.children.length,
+            itemBuilder: (context,index){
+          return ListTile(
+            title: Text(list[index]['name']),
+            subtitle: Text(list[index]['id'].toString()),
+          );
 
-TextFormField(
-  controller: textController,
-  maxLines: 4,
-  decoration: InputDecoration(
-    hintText: 'Enter your data',
-    border: OutlineInputBorder(),
-  ),
+        });
+       }
+     },
+   ),
 ),
-            SizedBox(height: 15,),
-            RoundedBtn(btnName: 'Add',
-                isLoading: loading,
-                ontap: (){
-              setState(() {
-                loading= true;
-              });
-            databaseRef.child(DateTime.now().millisecondsSinceEpoch.toString()).set({
-              'name': textController.text.toString(),
-                'id': DateTime.now().millisecondsSinceEpoch,
-            }
-            ).then((value){
-              ToastMsg().showToastMsg('Added');
-              setState(() {
-                loading = false;
-              });
-            }).onError((error, stackTrace){
-              ToastMsg().showToastMsg(error.toString());
-              setState(() {
-                loading= false;
-              });
-            });
+Expanded(child: FirebaseAnimatedList(query: ref,
+  itemBuilder: (context,snapshot, animation,  index){
+  return ListTile(
+    title: Text(snapshot.child('name').value.toString()),
+    subtitle: Text(snapshot.child('id').value.toString()),
+  );
+  },
 
-            })
-          ],
-        ),
+))
+        ],
       ),
     );
   }
