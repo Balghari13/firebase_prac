@@ -1,4 +1,5 @@
 import 'package:firebase_database/firebase_database.dart';
+import 'package:firebase_pract/UI/home_page.dart';
 import 'package:firebase_pract/UI/utilis/toast_msg.dart';
 import 'package:flutter/material.dart';
 
@@ -46,6 +47,8 @@ class _PostPageState extends State<PostPage> {
                   }
                   ).then((value){
                     ToastMsg().showToastMsg('Added');
+                    Navigator.push(context,
+                        MaterialPageRoute(builder: (context)=>HomeScreen()));
                     setState(() {
                       loading = false;
                     });
