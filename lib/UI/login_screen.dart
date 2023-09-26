@@ -56,11 +56,11 @@ class _LoginScreenState extends State<LoginScreen> {
                   }
                 },
               ),
-              SizedBox(height: 15,),
+              const SizedBox(height: 15,),
               TextFormField(
                 controller: passwordController,
                 obscureText: true,
-                decoration: InputDecoration(
+                decoration: const InputDecoration(
                   hintText: "Enter Password",
                   prefixIcon: Icon(Icons.lock)
                 ),
@@ -71,7 +71,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 },
               ),
 
-              SizedBox(height: 20,),
+              const SizedBox(height: 20,),
               RoundedBtn(btnName: 'Log In',isLoading: loading, ontap: (){
                   if(_formKey.currentState!.validate()){
                     setState(() {
@@ -84,7 +84,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         .then((value){
                           ToastMsg().showToastMsg(value.user!.email.toString());
                           Navigator.pushReplacement(context,
-                              MaterialPageRoute(builder: (context)=>HomeScreen()));
+                              MaterialPageRoute(builder: (context)=>const HomeScreen()));
 
   setState(() {
     loading = false;
@@ -98,15 +98,15 @@ class _LoginScreenState extends State<LoginScreen> {
                     });
                   }
               }),
-              SizedBox(height: 15,),
+              const SizedBox(height: 15,),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Text('Don\'t have any account?'),
+                  const Text('Don\'t have any account?'),
                   TextButton(onPressed: (){
                     Navigator.pushReplacement(context,
-                        MaterialPageRoute(builder: (context)=>SignUpScreen()));
-                  }, child: Text('Sign Up'))
+                        MaterialPageRoute(builder: (context)=>const SignUpScreen()));
+                  }, child: const Text('Sign Up'))
                 ],
               )
             ],

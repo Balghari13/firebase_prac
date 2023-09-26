@@ -23,19 +23,19 @@ class _SplashScreenState extends State<SplashScreen> {
     // TODO: implement initState
     super.initState();
 if(user != null){
- Timer(Duration(seconds: 3), (){
-   Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>HomeScreen()));
+ Timer(const Duration(seconds: 3), (){
+   Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>const HomeScreen()));
  });
 }else{
-  Timer(Duration(seconds: 3), (){
-    Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>LoginScreen()));
+  Timer(const Duration(seconds: 3), (){
+    Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>const LoginScreen()));
   });
 }
 }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return const Scaffold(
         body: Center(
           child: Text('Loading....', style: TextStyle(fontSize: 50),),));
   }

@@ -24,31 +24,32 @@ class _PostPageState extends State<PostPage> {
         child: Column(
           //mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            SizedBox(height: 15,),
+            const SizedBox(height: 15,),
 
             TextFormField(
               controller: textController,
               maxLines: 4,
-              decoration: InputDecoration(
+              decoration: const InputDecoration(
                 hintText: 'Enter your data',
                 border: OutlineInputBorder(),
               ),
             ),
-            SizedBox(height: 15,),
+            const SizedBox(height: 15,),
             RoundedBtn(btnName: 'Add',
                 isLoading: loading,
                 ontap: (){
                   setState(() {
                     loading= true;
                   });
-                  databaseRef.child(DateTime.now().millisecondsSinceEpoch.toString()).set({
+                  String id = DateTime.now().millisecondsSinceEpoch.toString();
+                  databaseRef.child(id).set({
                     'name': textController.text.toString(),
-                    'id': DateTime.now().millisecondsSinceEpoch,
+                    'id': id,
                   }
                   ).then((value){
                     ToastMsg().showToastMsg('Added');
                     Navigator.push(context,
-                        MaterialPageRoute(builder: (context)=>HomeScreen()));
+                        MaterialPageRoute(builder: (context)=>const HomeScreen()));
                     setState(() {
                       loading = false;
                     });

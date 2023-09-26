@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_pract/UI/Widget/rounded_btn.dart';
 import 'package:firebase_pract/UI/home_page.dart';
@@ -89,7 +87,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     .then((value){
                       ToastMsg().showToastMsg(value.user!.email.toString());
                       Navigator.pushReplacement(context,
-                          MaterialPageRoute(builder: (context)=>HomeScreen()));
+                          MaterialPageRoute(builder: (context)=>const HomeScreen()));
                       setState(() {
                         loading=false;
                       });
