@@ -22,7 +22,7 @@ class _PostPageState extends State<PostPage> {
       body: Padding(
         padding: const EdgeInsets.all(18.0),
         child: Column(
-          //mainAxisAlignment: MainAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.center,
           children: [
             const SizedBox(height: 15,),
 

@@ -15,7 +15,7 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-FirebaseAuth _signOut = FirebaseAuth.instance;
+final _signOut = FirebaseAuth.instance;
 
 final ref = FirebaseDatabase.instance.ref('user');
 final searchController = TextEditingController();
@@ -27,10 +27,9 @@ Future <void> showMyDialog(String edit, String id ) async{
       builder: (BuildContext context){
         return AlertDialog(
           title: const Text('Update'),
-          content: Container(
-            child: TextField(
-              controller: editController,
-            ),),
+          content: TextField(
+            controller: editController,
+          ),
           actions: [
             TextButton(onPressed: (){
               Navigator.pop(context);
@@ -162,6 +161,28 @@ Expanded(child: FirebaseAnimatedList(query: ref,
     return ListTile(
       title: Text(snapshot.child('name').value.toString()),
       subtitle: Text(snapshot.child('id').value.toString()),
+      trailing: PopupMenuButton(
+        child: Icon(Icons.more_vert),
+        itemBuilder: (context)=>[
+          PopupMenuItem(
+              child: ListTile(
+                leading: const Icon(Icons.edit),
+                title: const Text('Edit'),
+                onTap: (){
+                  Navigator.pop(context);
+                  showMyDialog(titles, snapshot.child('id').value.toString());
+                },
+              )),
+          PopupMenuItem(child: ListTile(
+            leading: const Icon(Icons.delete),
+            title: const Text('Delete'),
+            onTap: (){
+              ref.child(snapshot.child('id').value.toString()).remove();
+              Navigator.pop(context);
+            },
+          ))
+        ],
+      ),
     );
   }else{
     return Container();
